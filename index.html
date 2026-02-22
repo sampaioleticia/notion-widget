@@ -186,7 +186,7 @@ function updateHeaderDate(){
     if(sameDay(viewDate,today))ht.textContent="Hoje";
     else if(sameDay(viewDate,yesterday))ht.textContent="Ontem";
     else if(sameDay(viewDate,tomorrow))ht.textContent="Amanhã";
-    else ht.textContent=viewDate.toLocaleDateString("pt-BR",{weekday:"long"});
+    else{var w=viewDate.toLocaleDateString("pt-BR",{weekday:"long"});ht.textContent=w.charAt(0).toUpperCase()+w.slice(1);}
   }
 }
 function showDaySkeleton(){
