@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>Agenda</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#191919;--surface:#212121;--border:#2e2e2e;
+    --text:#e2e2dc;--text2:#8a8a86;--text3:#4e4e4b;--text3-strong:#5e5e5a;
+    --r:7px;--font:'IBM Plex Sans',sans-serif;--mono:'IBM Plex Mono',monospace;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{background:var(--bg)}
+  body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  ::-webkit-scrollbar{width:0;background:transparent}
+  .widget{width:100%;padding:14px 14px 12px}
+
+  /* header */
+  .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .hl{display:flex;align-items:baseline;gap:8px}
+  .htitle{font-size:15px;font-weight:600;color:var(--text);letter-spacing:-.01em}
+  .hdate{font-family:var(--mono);font-size:12px;color:var(--text3)}
+  .hnav{display:flex;align-items:center;gap:4px}
+  .hnav-btn{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border:none;background:transparent;border-radius:var(--r);color:var(--text3);cursor:pointer;transition:color .15s,background .15s}
+  .hnav-btn:hover{color:var(--text);background:var(--surface)}
+  .hnav-btn svg{width:18px;height:18px;stroke-linecap:round;stroke-linejoin:round}
+  .hr{display:flex;align-items:center;gap:6px}
+  .pdot{width:6px;height:6px;border-radius:50%;background:#4caf8a;animation:blink 2.4s ease infinite;flex-shrink:0}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+
+  /* auth */
+  .auth{padding:20px 14px;text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px}
+  .atitle{font-size:14px;font-weight:600;margin-bottom:4px}
+  .asub{font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.6}
+  .abtn{display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--text);color:#191919;font-family:var(--font);font-size:12px;font-weight:600;border:none;border-radius:6px;padding:14px 24px;min-height:48px;cursor:pointer;transition:opacity .15s;touch-action:manipulation;-webkit-tap-highlight-color:rgba(255,255,255,0.2);user-select:none;position:relative;z-index:1}
+  .abtn:hover{opacity:.85}
+  .abtn:active{opacity:.9}
+
+  /* section label */
+  .slabel{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px;margin-top:12px;padding-left:1px}
+  .slabel:first-child{margin-top:0}
+
+  /* cards */
+  .list{display:flex;flex-direction:column;gap:3px}
+  .card{display:flex;align-items:stretch;gap:10px;padding:9px 11px 9px 13px;border-radius:var(--r);background:var(--surface);border:1px solid var(--border);position:relative;overflow:hidden;transition:border-color .15s,background .15s,box-shadow .15s;cursor:pointer;text-decoration:none;color:inherit}
+  .card:hover{border-color:#383838;background:#232323}
+  .card::before{content:'';position:absolute;left:0;top:5px;bottom:5px;width:3px;border-radius:0 2px 2px 0;background:var(--c,#4caf8a);transition:width .2s ease}
+  .card.card-now{border-left:8px solid var(--c,#4caf8a);background:color-mix(in srgb,var(--c,#4caf8a) 14%,var(--surface));box-shadow:0 0 0 1px color-mix(in srgb,var(--c,#4caf8a) 18%,transparent)}
+  .card.card-now::before{width:8px;top:0;bottom:0;left:0;border-radius:0 4px 4px 0}
+
+  .tc{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;min-width:46px;flex-shrink:0;gap:1px}
+  .ts{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--text);line-height:1}
+  .te{font-family:var(--mono);font-size:11px;color:var(--text3-strong);line-height:1}
+  .ta{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:.05em;text-transform:uppercase}
+
+  .vl{width:1px;background:var(--border);align-self:stretch;flex-shrink:0}
+
+  .bc{flex:1;min-width:0}
+  .etop{display:flex;align-items:flex-start;justify-content:space-between;gap:5px;margin-bottom:2px}
+  .en{font-size:14px;font-weight:500;color:var(--text);line-height:1.3;word-break:break-word}
+  .npill{font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--c,#4caf8a);background:color-mix(in srgb,var(--c,#4caf8a) 14%,transparent);border:1px solid color-mix(in srgb,var(--c,#4caf8a) 28%,transparent);padding:2px 5px;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:1px}
+  .cr{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text3)}
+  .cd{width:5px;height:5px;border-radius:50%;background:var(--c,#4caf8a);flex-shrink:0}
+
+  .meta{display:flex;flex-direction:column;gap:3px;margin-top:5px}
+  .mr{display:flex;align-items:flex-start;gap:5px;font-size:11px;color:var(--text2);line-height:1.4}
+  .mr svg{flex-shrink:0;margin-top:1px;opacity:.6}
+  .mr a{color:#6fa8dc;text-decoration:none;word-break:break-all}
+  .mr a:hover{text-decoration:underline}
+  .card.cal-convidados .te,.card.cal-convidados .cr{color:var(--text2)}
+
+  /* materia tag */
+  .mtag{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:3px;margin-top:4px;letter-spacing:.02em}
+
+  /* skeleton */
+  .sk{display:flex;gap:9px;padding:9px 11px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:3px}
+  .sb{background:linear-gradient(90deg,#242424 25%,#2d2d2d 50%,#242424 75%);background-size:200% 100%;border-radius:4px;animation:sh 1.3s infinite}
+  @keyframes sh{to{background-position:-200% 0}}
+
+  /* empty */
+  .empty{padding:20px 14px;text-align:center;color:var(--text2);font-size:14px}
+
+  /* footer */
+  .foot{margin-top:10px;display:flex;align-items:center;justify-content:flex-start;gap:8px;font-family:var(--mono);font-size:10px;color:var(--text3-strong)}
+  .foot-l{text-align:left}
+</style>
+</head>
+<body>
+<div class="widget">
+  <div class="header">
+    <div class="hl">
+      <span class="htitle" id="htitle">Hoje</span>
+      <div class="hnav">
+        <button type="button" class="hnav-btn" id="btnPrevDay" title="Dia anterior" aria-label="Dia anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <span class="hdate" id="hd"></span>
+        <button type="button" class="hnav-btn" id="btnNextDay" title="Próximo dia" aria-label="Próximo dia"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18l6-6-6-6"/></svg></button>
+      </div>
+    </div>
+    <div class="hr">
+      <div class="pdot" id="dot" style="display:none"></div>
+    </div>
+  </div>
+
+  <div id="authWrap">
+    <div class="auth">
+      <div class="atitle">Conectar Google Calendar</div>
+      <div class="asub">Entre com sua conta Google para<br>ver os eventos do dia.</div>
+      <button type="button" class="abtn" id="btnGoogleAuth" onclick="handleAuth()">
+        <svg width="14" height="14" viewBox="0 0 24 24">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Entrar com Google
+      </button>
+    </div>
+  </div>
+
+  <div id="evWrap" style="display:none">
+    <div id="eventsSection"></div>
+    <div class="foot" id="foot">
+      <span class="foot-l" id="footTime"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  if(location.hash&&location.hash.indexOf("access_token=")!==-1)return;
+  if(!location.search&&location.pathname.indexOf("notion-widget")!==-1){
+    location.replace(location.pathname.replace(/\/?$/,"/")+"?_="+Date.now());
+    return;
+  }
+})();
+// ── CONFIG ── (API Key do Google fica só no Worker, em Secrets)
+const CLIENT_ID   = "838721119147-oret5s51b8hphal1k3a7sqfgor92n7de.apps.googleusercontent.com";
+const NOTION_DB   = "30e907f8-93f2-8119-8746-ef3bc2349b72";
+const SCOPES      = "https://www.googleapis.com/auth/calendar.readonly";
+const REFRESH     = 1;
+const REDIRECT_URI= "https://sampaioleticia.github.io/notion-widget/";
+
+// Google Calendar colors — calendário principal = rosa; Estágio = roxo
+const ROSA="#e05688";
+const ROXO="#a36bed";
+const GC={"1":"#a4bdfc","2":"#7ae7bf","3":"#dbadff","4":"#ff887c","5":"#fbd75b","6":"#ffb878","7":"#46d6db","8":"#e1e1e1","9":"#5484ed","10":"#51b749","11":"#dc2127"};
+const NC={"capitanileticiats":ROSA,"tcc":"#51b749","otag":"#5484ed","omog":"#5484ed","estágio":ROXO,"rotina":"#46d6db","eventos":"#ffb878","submissões":"#ffb878","eventos e submissões":"#ffb878","feriados":"#888"};
+const GCAL_DEFAULT_COLOR=ROSA;
+
+// Notion Matéria colors (paleta Notion)
+const MATERIA_COLORS = {
+  "TCC":                          { bg:"rgba(81,183,73,0.15)",   border:"rgba(81,183,73,0.4)",   text:"#7ed67a" },
+  "OTAG":                         { bg:"rgba(84,132,237,0.15)",  border:"rgba(84,132,237,0.4)",  text:"#7aaaf5" },
+  "OMOG":                         { bg:"rgba(84,132,237,0.15)",  border:"rgba(84,132,237,0.4)",  text:"#7aaaf5" },
+  "Estágio":                      { bg:"rgba(163,107,237,0.15)", border:"rgba(163,107,237,0.4)", text:"#c58fff" },  // roxo
+  "Rotina":                       { bg:"rgba(70,214,219,0.2)",   border:"rgba(70,214,219,0.45)", text:"#46d6db" },
+  "Eventos e Submissões de Artigos":{ bg:"rgba(255,184,120,0.2)", border:"rgba(255,184,120,0.4)", text:"#ffb878" },
+  "Eventos e Submissão de Artigos":{ bg:"rgba(255,184,120,0.2)", border:"rgba(255,184,120,0.4)", text:"#ffb878" },
+};
+const MATERIA_BAR = {
+  "TCC":"#51b749","OTAG":"#5484ed","OMOG":"#5484ed",
+  "Estágio":"#a36bed","Rotina":"#46d6db",  // Estágio = roxo
+  "Eventos e Submissões de Artigos":"#ffb878",
+  "Eventos e Submissão de Artigos":"#ffb878"
+};
+
+let tokenClient, gsOk=false, timer=null, cd=REFRESH, pendingSilentRefresh=false, silentRefreshCb=null;
+var lastNotionItems=[], lastGcalItems=[], notionRetryTimer=null;
+var lastGcalViewKey=null, lastNotionViewKey=null;
+var viewDate=new Date();
+function viewDateKey(d){d=d||viewDate;return d.getFullYear()+"-"+(String(d.getMonth()+1).padStart(2,"0"))+"-"+String(d.getDate()).padStart(2,"0");}
+function updateHeaderDate(){
+  var hd=document.getElementById("hd");
+  if(hd)hd.textContent=viewDate.toLocaleDateString("pt-BR",{weekday:"short",day:"numeric",month:"short"});
+  var ht=document.getElementById("htitle");
+  if(ht){
+    var today=new Date();
+    var yesterday=new Date(today);yesterday.setDate(yesterday.getDate()-1);
+    var tomorrow=new Date(today);tomorrow.setDate(tomorrow.getDate()+1);
+    var sameDay=function(a,b){return a.getFullYear()===b.getFullYear()&&a.getMonth()===b.getMonth()&&a.getDate()===b.getDate();};
+    if(sameDay(viewDate,today))ht.textContent="Hoje";
+    else if(sameDay(viewDate,yesterday))ht.textContent="Ontem";
+    else if(sameDay(viewDate,tomorrow))ht.textContent="Amanhã";
+    else ht.textContent=viewDate.toLocaleDateString("pt-BR",{weekday:"long"});
+  }
+}
+function showDaySkeleton(){
+  var sec=document.getElementById("eventsSection");
+  if(!sec)return;
+  sec.innerHTML='<div class="list"><div class="sk"><div class="sb" style="width:38px;height:10px;flex-shrink:0"></div><div class="sb" style="flex:1;height:12px"></div></div><div class="sk"><div class="sb" style="width:38px;height:10px;flex-shrink:0"></div><div class="sb" style="flex:1;height:12px"></div></div><div class="sk"><div class="sb" style="width:38px;height:10px;flex-shrink:0"></div><div class="sb" style="flex:1;height:12px"></div></div></div>';
+}
+function goPrevDay(){viewDate.setDate(viewDate.getDate()-1);updateHeaderDate();showDaySkeleton();loadAll();}
+function goNextDay(){viewDate.setDate(viewDate.getDate()+1);updateHeaderDate();showDaySkeleton();loadAll();}
+function resetToToday(){viewDate=new Date();updateHeaderDate();}
+
+function showLoginScreen(){
+  document.getElementById("authWrap").style.display="block";
+  document.getElementById("evWrap").style.display="none";
+  document.getElementById("dot").style.display="none";
+  localStorage.removeItem("gct");
+}
+function isMobile(){return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||("ontouchstart"in window&&window.innerWidth<900);}
+function gisLoaded(){
+  tokenClient=google.accounts.oauth2.initTokenClient({
+    client_id:CLIENT_ID,scope:SCOPES,
+    callback:r=>{
+      if(pendingSilentRefresh){
+        pendingSilentRefresh=false;
+        var cb=silentRefreshCb;silentRefreshCb=null;
+        if(!r.error){localStorage.setItem("gct",JSON.stringify(r));if(cb)cb(true);return;}
+        if(cb)cb(false);return;
+      }
+      if(!r.error){localStorage.setItem("gct",JSON.stringify(r));signedIn();}
+    }
+  });
+  gsOk=true;boot();
+}
+function trySilentRefresh(then){
+  if(!tokenClient){then(false);return;}
+  silentRefreshCb=then;
+  pendingSilentRefresh=true;
+  tokenClient.requestAccessToken({prompt:"none"});
+  setTimeout(function(){if(pendingSilentRefresh){pendingSilentRefresh=false;silentRefreshCb=null;then(false);}},3500);
+}
+function boot(){
+  if(!gsOk)return;
+  var hash=location.hash||"";
+  if(hash.indexOf("access_token=")!==-1){
+    var params=new URLSearchParams(hash.replace(/^#/,""));
+    var access_token=params.get("access_token");
+    var expires_in=params.get("expires_in");
+    var scope=params.get("scope");
+    if(access_token){
+      var tok={access_token:access_token,token_type:"Bearer",expires_in:expires_in?parseInt(expires_in,10):3600,scope:scope||SCOPES};
+      localStorage.setItem("gct",JSON.stringify(tok));
+      history.replaceState(null,"",location.pathname+location.search);
+      signedIn();
+      return;
+    }
+  }
+  const s=localStorage.getItem("gct");
+  if(s){try{signedIn();}catch(e){localStorage.removeItem("gct");}}
+}
+function handleAuth(){
+  if(isMobile()){
+    var u="https://accounts.google.com/o/oauth2/v2/auth?client_id="+encodeURIComponent(CLIENT_ID)+"&redirect_uri="+encodeURIComponent(REDIRECT_URI)+"&response_type=token&scope="+encodeURIComponent(SCOPES)+"&include_granted_scopes=true";
+    location.href=u;
+    return;
+  }
+  if(!tokenClient){alert("Aguarde o Google carregar e tente de novo.");return;}
+  tokenClient.requestAccessToken({prompt:""});
+}
+function signedIn(){
+  document.getElementById("authWrap").style.display="none";
+  document.getElementById("evWrap").style.display="block";
+  document.getElementById("dot").style.display="block";
+  resetToToday();
+  document.getElementById("btnPrevDay").onclick=goPrevDay;
+  document.getElementById("btnNextDay").onclick=goNextDay;
+  loadAll();startCycle();
+}
+function startCycle(){
+  clearInterval(timer);cd=REFRESH;
+  timer=setInterval(()=>{cd--;if(cd<=0){cd=REFRESH;loadAll();}},1000);
+}
+function loadAll(){
+  (async()=>{
+    const now=new Date();
+    const vd=new Date(viewDate);
+    vd.setHours(0,0,0,0);
+    const loadViewKey=viewDateKey(vd);
+    const vdEnd=new Date(vd);
+    vdEnd.setHours(23,59,59,999);
+    const tMin=vd.toISOString(),tMax=vdEnd.toISOString();
+    const isViewingToday=vd.getFullYear()===now.getFullYear()&&vd.getMonth()===now.getMonth()&&vd.getDate()===now.getDate();
+    const sec=document.getElementById("eventsSection");
+    let gcalItems=[], notionItems=[];
+
+    try{
+      const token=JSON.parse(localStorage.getItem("gct")||"null");
+      if(!token||!token.access_token){showLoginScreen();return;}
+      const auth="Bearer "+token.access_token;
+      const calRes=await fetch(PROXY+"/calendar/v3/users/me/calendarList?minAccessRole=reader",{headers:{Authorization:auth}});
+      if(calRes.status===401){
+        trySilentRefresh(function(ok){if(ok)loadAll();else showLoginScreen();});
+        return;
+      }
+      const calData=await calRes.json();
+      if(calData.error){console.error("Calendar list:",calData.error);var errMsg=calData.error.message||String(calData.error.code||"erro");sec.innerHTML=`<div class="list"><div class="empty">Google Agenda: ${esc(errMsg)} (confira GOOGLE_API_KEY no Worker)</div></div>`;document.getElementById("footTime").textContent="";return;}
+      const cals=calData.items||[];
+      const q="timeMin="+encodeURIComponent(tMin)+"&timeMax="+encodeURIComponent(tMax)+"&singleEvents=true&orderBy=startTime&maxResults=50";
+      const all=await Promise.all(cals.map(cal=>
+        fetch(PROXY+"/calendar/v3/calendars/"+encodeURIComponent(cal.id)+"/events?"+q,{headers:{Authorization:auth}})
+        .then(r=>r.json())
+        .then(r=>{if(r.error){console.warn("Events for "+cal.id,r.error);return [];}return (r.items||[]).map(ev=>{ev._cal=cal.summary||cal.id;ev._color=rc(cal,ev);return ev;});})
+        .catch(err=>{console.warn("Events fetch "+cal.id,err);return [];})
+      ));
+      gcalItems=all.flat().map(ev=>({
+        source:"gcal",
+        allDay:!ev.start.dateTime,
+        sortTime:ev.start.dateTime?new Date(ev.start.dateTime).getTime():0,
+        ev
+      }));
+      lastGcalItems=gcalItems;
+      lastGcalViewKey=loadViewKey;
+    }catch(err){
+      if(err&&err.status===401){trySilentRefresh(function(ok){if(ok)loadAll();else showLoginScreen();});return;}
+      if(lastGcalItems.length&&lastGcalViewKey===loadViewKey)gcalItems=lastGcalItems;
+    }
+
+    try{
+      const viewDateStr=loadViewKey;
+      const dbResp=await fetch(`${PROXY}/v1/databases/${NOTION_DB}`,{method:"GET"});
+      if(!dbResp.ok)throw new Error("Notion DB");
+      const dbData=await dbResp.json();
+      const dataSourceId=(dbData.data_sources||[])[0]?.id;
+      if(!dataSourceId)throw new Error("No data source");
+      const resp=await fetch(`${PROXY}/v1/data_sources/${dataSourceId}/query`,{
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({sorts:[{property:"Data",direction:"ascending"}],page_size:100})
+      });
+      if(!resp.ok)throw new Error("Notion query");
+      const data=await resp.json();
+      const pages=(data.results||[]).filter(p=>{
+        const startVal=p.properties?.Data?.date?.start;
+        const endVal=p.properties?.Data?.date?.end;
+        const startDay=startVal?startVal.split("T")[0]:null;
+        const endDay=endVal?endVal.split("T")[0]:null;
+        return (startDay===viewDateStr)||(endDay===viewDateStr);
+      });
+      notionItems=pages.map(page=>{
+        const props=page.properties;
+        const startDT=props?.Data?.date?.start;
+        const endDT=props?.Data?.date?.end;
+        const allDay=startDT&&!startDT.includes("T");
+        return {
+          source:"notion",
+          allDay,
+          sortTime:startDT&&startDT.includes("T")?new Date(startDT).getTime():0,
+          page,startDT,endDT
+        };
+      });
+      lastNotionItems=notionItems;
+      lastNotionViewKey=loadViewKey;
+      if(notionRetryTimer){clearTimeout(notionRetryTimer);notionRetryTimer=null;}
+    }catch(_){
+      if(lastNotionItems.length&&lastNotionViewKey===loadViewKey)notionItems=lastNotionItems;
+      if(!notionRetryTimer){notionRetryTimer=setTimeout(function(){notionRetryTimer=null;loadAll();},3000);}
+    }
+
+    let merged=[...gcalItems,...notionItems].sort((a,b)=>{
+      if(a.allDay!==b.allDay)return a.allDay?-1:1;
+      if(a.allDay)return 0;
+      return a.sortTime-b.sortTime;
+    });
+
+    if(viewDateKey()!==loadViewKey)return;
+    const nowMs=now.getTime();
+    const hideAfterMs=30*60*1000;
+    if(isViewingToday){
+      merged=merged.filter(it=>{
+        if(it.allDay)return true;
+        if(it.source==="gcal"){
+          if(!it.ev.end?.dateTime)return nowMs<=it.sortTime+hideAfterMs;
+          return nowMs<=new Date(it.ev.end.dateTime).getTime()+hideAfterMs;
+        }
+        if(!it.endDT||!it.endDT.includes("T"))return nowMs<=it.sortTime+hideAfterMs;
+        return nowMs<=new Date(it.endDT).getTime()+hideAfterMs;
+      });
+    }
+
+    renderUnified(merged,now,isViewingToday);
+    document.getElementById("footTime").textContent="atualizado "+now.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+  })();
+}
+
+const PROXY="https://noisy-king-6a8.capitanileticiats.workers.dev";
+
+function renderUnified(items,now,isViewingToday){
+  if(typeof isViewingToday==="undefined")isViewingToday=true;
+  const sec=document.getElementById("eventsSection");
+  let html=`<div class="list">`;
+  if(!items.length){
+    html+=`<div class="empty">${isViewingToday?"Nenhum evento hoje":"Nenhum evento neste dia"}</div>`;
+  } else {
+    items.forEach(it=>{
+      if(it.source==="gcal"){
+        const ev=it.ev, c=ev._color, isN=isViewingToday&&hp(ev,now), ad=it.allDay;
+        const isMainCal=(ev._cal||"").toLowerCase().includes("capitanileticiats");
+        const s=ad?null:ft(ev.start.dateTime), e=ad?null:ft(ev.end?.dateTime);
+        const meet=ev.hangoutLink||vlink(ev);
+        const att=(ev.attendees||[]).filter(a=>!a.self&&a.email);
+        const href=escUrl(ev.htmlLink||"https://calendar.google.com/calendar/r");
+        const cSafe=/^#[0-9a-fA-F]{3,8}$|^rgb\([^)]+\)$|^rgba\([^)]+\)$/.test(c)?c:"#888";
+        html+=`<a class="card${isN?" card-now":""}${isMainCal?" cal-convidados":""}" style="--c:${escAttr(cSafe)}" href="${href}" target="_blank" rel="noopener">
+  <div class="tc">${ad?`<span class="ta">dia<br>todo</span>`:`<span class="ts">${s}</span><span class="te">${e}</span>`}</div>
+  <div class="vl"></div>
+  <div class="bc">
+    <div class="etop"><div class="en">${esc(ev.summary||"Sem título")}</div></div>
+    <div class="cr"><span class="cd"></span>${esc(ev._cal)}</div>
+    ${att.length||meet?`<div class="meta">${att.length?`<div class="mr"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>${att.slice(0,3).map(a=>esc(a.displayName||a.email)).join(", ")}${att.length>3?` +${att.length-3}`:""}</div>`:""}${meet?`<div class="mr"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg><span style="color:#6fa8dc">Entrar na chamada</span></div>`:""}</div>`:""}
+  </div>
+</a>`;
+      } else {
+        const page=it.page, props=page.properties;
+        const titleArr=props.Nome?.title||props.Name?.title||props.Título?.title||[];
+        const title=titleArr.map(t=>t.plain_text).join("")||"Sem título";
+        const startDT=it.startDT, endDT=it.endDT, allDay=it.allDay;
+        const s=allDay?null:ft(startDT), e=endDT&&!allDay?ft(endDT):null;
+        const materiaSel=props["Matéria"]?.select||props["Materia"]?.select||null;
+        const materia=materiaSel?materiaSel.name:null;
+        const mStyle=materia&&MATERIA_COLORS[materia]?MATERIA_COLORS[materia]:null;
+        const barColor=materia&&MATERIA_BAR[materia]?MATERIA_BAR[materia]:"#888";
+        const pageUrl=`https://notion.so/${String(page.id).replace(/[^0-9a-fA-F]/g,"")}`;
+        const isN=isViewingToday&&startDT&&!allDay?hp({start:{dateTime:startDT},end:endDT?{dateTime:endDT}:undefined},now):false;
+        const barSafe=/^#[0-9a-fA-F]{3,8}$|^rgb\([^)]+\)$|^rgba\([^)]+\)$/.test(barColor)?barColor:"#888";
+        html+=`<a class="card card-notion${isN?" card-now":""}" style="--c:${escAttr(barSafe)}" href="${escAttr(pageUrl)}" data-notion-url="${escAttr(pageUrl)}" target="_blank" rel="noopener">
+  <div class="tc">${allDay?`<span class="ta">dia<br>todo</span>`:`<span class="ts">${s}</span>${e?`<span class="te">${e}</span>`:""}`}</div>
+  <div class="vl"></div>
+  <div class="bc">
+    <div class="etop"><div class="en">${esc(title)}</div></div>
+    ${materia?`<div>${mStyle?`<span class="mtag" style="background:${mStyle.bg};border:1px solid ${mStyle.border};color:${mStyle.text}">${esc(materia)}</span>`:`<span class="mtag" style="background:rgba(128,128,128,0.15);border:1px solid rgba(128,128,128,0.3);color:#888">${esc(materia)}</span>`}</div>`:""}
+  </div>
+</a>`;
+      }
+    });
+  }
+  html+=`</div>`;
+  if(sec.innerHTML!==html)sec.innerHTML=html;
+}
+(function(){
+  var el=document.getElementById("eventsSection");
+  if(!el)return;
+  el.addEventListener("click",function(e){
+    var a=e.target.closest("a[data-notion-url]");
+    if(a){e.preventDefault();window.open(a.getAttribute("data-notion-url"),"_blank","noopener,noreferrer");}
+  });
+})();
+
+// ── HELPERS ──
+function rc(cal,ev){
+  const summary=(cal.summary||"").toLowerCase(), id=(cal.id||"").toLowerCase();
+  if(id==="primary"||summary.includes("capitanileticiats")||id.includes("capitanileticiats"))return ROSA;
+  if(ev.colorId)return GC[ev.colorId]||GCAL_DEFAULT_COLOR;
+  if(cal.backgroundColor)return cal.backgroundColor;
+  for(const[n,v]of Object.entries(NC))if(summary.includes(n)||id.includes(n))return v;
+  return GCAL_DEFAULT_COLOR;
+}
+const AGORA_WINDOW_MS=5*60*1000; // 5 min antes/depois do início OU durante todo o evento = destaque "agora"
+function hp(ev,now){
+  if(!ev.start||!ev.start.dateTime)return false;
+  const startMs=new Date(ev.start.dateTime).getTime();
+  const t=now.getTime();
+  if(t>=startMs-AGORA_WINDOW_MS&&t<=startMs+AGORA_WINDOW_MS)return true;
+  if(ev.end&&ev.end.dateTime){
+    const endMs=new Date(ev.end.dateTime).getTime();
+    if(t>=startMs&&t<=endMs)return true;
+  }
+  return false;
+}
+function ft(dt){return new Date(dt).toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});}
+function vlink(ev){const d=(ev.description||"")+(ev.location||"");const m=d.match(/https?:\/\/[^\s"<>]*(meet\.google|zoom\.us|teams\.microsoft|meet\.jit\.si)[^\s"<>]*/i);return m?m[0]:null;}
+function esc(s){
+  var x=String(s);
+  return x.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;").replace(/\//g,"&#47;");
+}
+function escAttr(s){return esc(s);}
+function escUrl(u){
+  if(!u||typeof u!=="string")return"#";
+  var t=u.trim().toLowerCase();
+  if(t.indexOf("https://")===0||t.indexOf("http://")===0)return escAttr(u);
+  return"#";
+}
+
+// header date
+try{updateHeaderDate();}catch(_){}
+window.gisLoaded=gisLoaded;
+setTimeout(function(){if(!gsOk){gsOk=true;boot();}},4000);
+</script>
+<script src="https://accounts.google.com/gsi/client" onload="gisLoaded()" defer></script>
+<noscript><p style="padding:1rem;color:#8a8a86">Ative o JavaScript para usar a agenda.</p></noscript>
+</body>
+</html>
