@@ -247,7 +247,11 @@ function boot(){
   if(s){try{signedIn();}catch(e){localStorage.removeItem("gct");}}
 }
 function handleAuth(){
-  if(!tokenClient){alert("Aguarde o Google carregar e tente de novo.");return;}
+  if(!tokenClient){
+    var u="https://accounts.google.com/o/oauth2/v2/auth?client_id="+encodeURIComponent(CLIENT_ID)+"&redirect_uri="+encodeURIComponent(REDIRECT_URI)+"&response_type=token&scope="+encodeURIComponent(SCOPES)+"&include_granted_scopes=true";
+    location.href=u;
+    return;
+  }
   tokenClient.requestAccessToken({prompt:""});
 }
 function signedIn(){
