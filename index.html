@@ -365,11 +365,13 @@ function loadAll(){
         const startDT=props?.Data?.date?.start;
         const endDT=props?.Data?.date?.end;
         const allDay=startDT&&!startDT.includes("T");
+        const materiaSel=props["Matéria"]?.select||props["Materia"]?.select||null;
+        const materia=materiaSel?materiaSel.name:null;
         return {
           source:"notion",
           allDay,
           sortTime:startDT&&startDT.includes("T")?new Date(startDT).getTime():0,
-          page,startDT,endDT
+          page,startDT,endDT,materia
         };
       });
       lastNotionItems=notionItems;
@@ -381,6 +383,10 @@ function loadAll(){
     }
 
     let merged=[...gcalItems,...notionItems].sort((a,b)=>{
+      var aFeriados=a.source==="notion"&&a.materia==="Feriados e Home Office";
+      var bFeriados=b.source==="notion"&&b.materia==="Feriados e Home Office";
+      if(aFeriados&&!bFeriados)return -1;
+      if(!aFeriados&&bFeriados)return 1;
       if(a.allDay!==b.allDay)return a.allDay?-1:1;
       if(a.allDay)return 0;
       return a.sortTime-b.sortTime;
@@ -506,7 +512,6 @@ function decorateTitle(title,opts){
   var tLower=t.toLowerCase();
   if(tLower.indexOf("daily")===0)parts.push('<span class="ev-sym" style="color:#a36bed">☎︎</span>');
   if(materia==="TCC"||isCapitanileticiats)parts.push('<span class="ev-sym" style="color:#e05688">✎</span>');
-  if(materia==="Feriados e Home Office")parts.push('<span class="ev-sym" style="color:#7ed67a">☀</span>');
   if(tLower.indexOf("recesso")===0||tLower.indexOf("feriado")===0||tLower.indexOf("home office")===0)parts.push('<span class="ev-sym" style="color:#7ed67a">❤︎</span>');
   parts.push(esc(t||"Sem título"));
   return parts.join("");
