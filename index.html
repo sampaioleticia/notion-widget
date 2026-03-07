@@ -207,6 +207,30 @@ function showLoginScreen(){
   localStorage.removeItem("gct");
 }
 function isMobile(){return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||("ontouchstart"in window&&window.innerWidth<900);}
+function saveToken(tok){
+  if(!tok)return;
+  const copy=Object.assign({},tok,{ts:Date.now()});
+  localStorage.setItem("gct",JSON.stringify(copy));
+}
+function getStoredToken(){
+  try{
+    const raw=localStorage.getItem("gct");
+    if(!raw)return null;
+    const tok=JSON.parse(raw);
+    if(!tok||!tok.access_token)return null;
+    return tok;
+  }catch(_){
+    return null;
+  }
+}
+function isTokenFresh(tok){
+  if(!tok||!tok.access_token)return false;
+  if(!tok.expires_in||!tok.ts)return true;
+  const skew=60*1000;
+  const exp=tok.ts+tok.expires_in*1000-skew;
+  return Date.now()<exp;
+}
+
 function gisLoaded(){
   tokenClient=google.accounts.oauth2.initTokenClient({
     client_id:CLIENT_ID,scope:SCOPES,
@@ -214,10 +238,10 @@ function gisLoaded(){
       if(pendingSilentRefresh){
         pendingSilentRefresh=false;
         var cb=silentRefreshCb;silentRefreshCb=null;
-        if(!r.error){localStorage.setItem("gct",JSON.stringify(r));if(cb)cb(true);return;}
+        if(!r.error){saveToken(r);if(cb)cb(true);return;}
         if(cb)cb(false);return;
       }
-      if(!r.error){localStorage.setItem("gct",JSON.stringify(r));signedIn();}
+      if(!r.error){saveToken(r);signedIn();}
     }
   });
   gsOk=true;boot();
@@ -239,14 +263,25 @@ function boot(){
     var scope=params.get("scope");
     if(access_token){
       var tok={access_token:access_token,token_type:"Bearer",expires_in:expires_in?parseInt(expires_in,10):3600,scope:scope||SCOPES};
-      localStorage.setItem("gct",JSON.stringify(tok));
+      saveToken(tok);
       history.replaceState(null,"",location.pathname+location.search);
       signedIn();
       return;
     }
   }
-  const s=localStorage.getItem("gct");
-  if(s){try{signedIn();}catch(e){localStorage.removeItem("gct");}}
+  const existing=getStoredToken();
+  if(existing){
+    if(isTokenFresh(existing)){
+      try{signedIn();}catch(e){localStorage.removeItem("gct");}
+    }else if(tokenClient){
+      trySilentRefresh(function(ok){
+        if(ok){signedIn();}
+        else{showLoginScreen();}
+      });
+    }else{
+      try{signedIn();}catch(e){localStorage.removeItem("gct");}
+    }
+  }
 }
 function handleAuth(){
   if(!tokenClient){
