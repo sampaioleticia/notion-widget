@@ -20,7 +20,6 @@
   ::-webkit-scrollbar{width:0;background:transparent}
   .widget{width:100%;padding:14px 14px 12px}
 
-  /* header */
   .header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
   .hl{display:flex;align-items:baseline;gap:8px}
   .htitle{font-size:15px;font-weight:600;color:var(--text);letter-spacing:-.01em}
@@ -33,7 +32,6 @@
   .pdot{width:6px;height:6px;border-radius:50%;background:#4caf8a;animation:blink 2.4s ease infinite;flex-shrink:0}
   @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
 
-  /* auth */
   .auth{padding:20px 14px;text-align:center;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:8px}
   .atitle{font-size:14px;font-weight:600;margin-bottom:4px}
   .asub{font-size:12px;color:var(--text2);margin-bottom:14px;line-height:1.6}
@@ -41,11 +39,9 @@
   .abtn:hover{opacity:.85}
   .abtn:active{opacity:.9}
 
-  /* section label */
   .slabel{font-family:var(--mono);font-size:9px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px;margin-top:12px;padding-left:1px}
   .slabel:first-child{margin-top:0}
 
-  /* cards */
   .list{display:flex;flex-direction:column;gap:3px}
   .card{display:flex;align-items:stretch;gap:10px;padding:9px 11px 9px 13px;border-radius:var(--r);background:var(--surface);border:1px solid var(--border);position:relative;overflow:hidden;transition:border-color .15s,background .15s,box-shadow .15s;cursor:pointer;text-decoration:none;color:inherit}
   .card:hover{border-color:#383838;background:#232323}
@@ -66,7 +62,6 @@
   .npill{font-family:var(--mono);font-size:8px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--c,#4caf8a);background:color-mix(in srgb,var(--c,#4caf8a) 14%,transparent);border:1px solid color-mix(in srgb,var(--c,#4caf8a) 28%,transparent);padding:2px 5px;border-radius:3px;white-space:nowrap;flex-shrink:0;margin-top:1px}
   .cr{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--text3)}
   .cd{width:5px;height:5px;border-radius:50%;background:var(--c,#4caf8a);flex-shrink:0}
-.ev-heart{color:#7ed67a;margin-right:4px}
 
   .meta{display:flex;flex-direction:column;gap:3px;margin-top:5px}
   .mr{display:flex;align-items:flex-start;gap:5px;font-size:11px;color:var(--text2);line-height:1.4}
@@ -75,18 +70,14 @@
   .mr a:hover{text-decoration:underline}
   .card.cal-convidados .te,.card.cal-convidados .cr{color:var(--text2)}
 
-  /* materia tag */
   .mtag{display:inline-block;font-size:10px;font-weight:500;padding:2px 7px;border-radius:3px;margin-top:4px;letter-spacing:.02em}
 
-  /* skeleton */
   .sk{display:flex;gap:9px;padding:9px 11px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:3px}
   .sb{background:linear-gradient(90deg,#242424 25%,#2d2d2d 50%,#242424 75%);background-size:200% 100%;border-radius:4px;animation:sh 1.3s infinite}
   @keyframes sh{to{background-position:-200% 0}}
 
-  /* empty */
   .empty{padding:20px 14px;text-align:center;color:var(--text2);font-size:14px}
 
-  /* footer */
   .foot{margin-top:10px;display:flex;align-items:center;justify-content:flex-start;gap:8px;font-family:var(--mono);font-size:10px;color:var(--text3-strong)}
   .foot-l{text-align:left}
 </style>
@@ -139,26 +130,23 @@
     return;
   }
 })();
-// ── CONFIG ── (API Key do Google fica só no Worker, em Secrets)
 const CLIENT_ID   = "838721119147-oret5s51b8hphal1k3a7sqfgor92n7de.apps.googleusercontent.com";
 const NOTION_DB   = "30e907f8-93f2-8119-8746-ef3bc2349b72";
 const SCOPES      = "https://www.googleapis.com/auth/calendar.readonly";
 const REFRESH     = 1;
 const REDIRECT_URI= "https://sampaioleticia.github.io/notion-widget/";
 
-// Google Calendar colors — calendário principal = rosa; Estágio = roxo
 const ROSA="#e05688";
 const ROXO="#a36bed";
 const GC={"1":"#a4bdfc","2":"#7ae7bf","3":"#dbadff","4":"#ff887c","5":"#fbd75b","6":"#ffb878","7":"#46d6db","8":"#e1e1e1","9":"#5484ed","10":"#51b749","11":"#dc2127"};
 const NC={"capitanileticiats":ROSA,"tcc":ROSA,"otag":"#5484ed","omog":"#5484ed","estágio":ROXO,"rotina":"#46d6db","eventos":"#ffb878","submissões":"#ffb878","eventos e submissões":"#ffb878","feriados":"#888"};
 const GCAL_DEFAULT_COLOR=ROSA;
 
-// Notion Matéria colors (paleta Notion)
 const MATERIA_COLORS = {
   "TCC":                          { bg:"rgba(224,86,136,0.15)",  border:"rgba(224,86,136,0.4)",  text:"#e05688" },
   "OTAG":                         { bg:"rgba(84,132,237,0.15)",  border:"rgba(84,132,237,0.4)",  text:"#7aaaf5" },
   "OMOG":                         { bg:"rgba(84,132,237,0.15)",  border:"rgba(84,132,237,0.4)",  text:"#7aaaf5" },
-  "Estágio":                      { bg:"rgba(163,107,237,0.15)", border:"rgba(163,107,237,0.4)", text:"#c58fff" },  // roxo
+  "Estágio":                      { bg:"rgba(163,107,237,0.15)", border:"rgba(163,107,237,0.4)", text:"#c58fff" },
   "Rotina":                       { bg:"rgba(70,214,219,0.2)",   border:"rgba(70,214,219,0.45)", text:"#46d6db" },
   "Eventos e Submissões de Artigos":{ bg:"rgba(255,184,120,0.2)", border:"rgba(255,184,120,0.4)", text:"#ffb878" },
   "Eventos e Submissão de Artigos":{ bg:"rgba(255,184,120,0.2)", border:"rgba(255,184,120,0.4)", text:"#ffb878" },
@@ -166,7 +154,7 @@ const MATERIA_COLORS = {
 };
 const MATERIA_BAR = {
   "TCC":"#e05688","OTAG":"#5484ed","OMOG":"#5484ed",
-  "Estágio":"#a36bed","Rotina":"#46d6db",  // Estágio = roxo
+  "Estágio":"#a36bed","Rotina":"#46d6db",
   "Eventos e Submissões de Artigos":"#ffb878",
   "Eventos e Submissão de Artigos":"#ffb878",
   "Feriados e Home Office":"#51b749"
@@ -412,7 +400,7 @@ function loadAll(){
     }
 
     renderUnified(merged,now,isViewingToday);
-    document.getElementById("footTime").textContent="atualizado "+now.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+    document.getElementById("footTime").textContent="";
   })();
 }
 
@@ -433,14 +421,12 @@ function renderUnified(items,now,isViewingToday){
         const meet=ev.hangoutLink||vlink(ev);
         const att=(ev.attendees||[]).filter(a=>!a.self&&a.email);
         const href=escUrl(ev.htmlLink||"https://calendar.google.com/calendar/r");
-        const rawTitle=ev.summary||"Sem título";
-        const decoratedTitle=decorateTitle(rawTitle);
         const cSafe=/^#[0-9a-fA-F]{3,8}$|^rgb\([^)]+\)$|^rgba\([^)]+\)$/.test(c)?c:"#888";
         html+=`<a class="card${isN?" card-now":""}${isMainCal?" cal-convidados":""}" style="--c:${escAttr(cSafe)}" href="${href}" target="_blank" rel="noopener">
   <div class="tc">${ad?`<span class="ta">dia<br>todo</span>`:`<span class="ts">${s}</span><span class="te">${e}</span>`}</div>
   <div class="vl"></div>
   <div class="bc">
-    <div class="etop"><div class="en">${decoratedTitle}</div></div>
+    <div class="etop"><div class="en">${esc(ev.summary||"Sem título")}</div></div>
     <div class="cr"><span class="cd"></span>${esc(ev._cal)}</div>
     ${att.length||meet?`<div class="meta">${att.length?`<div class="mr"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>${att.slice(0,3).map(a=>esc(a.displayName||a.email)).join(", ")}${att.length>3?` +${att.length-3}`:""}</div>`:""}${meet?`<div class="mr"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg><span style="color:#6fa8dc">Entrar na chamada</span></div>`:""}</div>`:""}
   </div>
@@ -456,14 +442,13 @@ function renderUnified(items,now,isViewingToday){
         const mStyle=materia&&MATERIA_COLORS[materia]?MATERIA_COLORS[materia]:null;
         const barColor=materia&&MATERIA_BAR[materia]?MATERIA_BAR[materia]:"#888";
         const pageUrl=`https://notion.so/${String(page.id).replace(/[^0-9a-fA-F]/g,"")}`;
-        const decoratedTitle=decorateTitle(title);
         const isN=isViewingToday&&startDT&&!allDay?hp({start:{dateTime:startDT},end:endDT?{dateTime:endDT}:undefined},now):false;
         const barSafe=/^#[0-9a-fA-F]{3,8}$|^rgb\([^)]+\)$|^rgba\([^)]+\)$/.test(barColor)?barColor:"#888";
         html+=`<a class="card card-notion${isN?" card-now":""}" style="--c:${escAttr(barSafe)}" href="${escAttr(pageUrl)}" data-notion-url="${escAttr(pageUrl)}" target="_blank" rel="noopener">
   <div class="tc">${allDay?`<span class="ta">dia<br>todo</span>`:`<span class="ts">${s}</span>${e?`<span class="te">${e}</span>`:""}`}</div>
   <div class="vl"></div>
   <div class="bc">
-    <div class="etop"><div class="en">${decoratedTitle}</div></div>
+    <div class="etop"><div class="en">${esc(title)}</div></div>
     ${materia?`<div>${mStyle?`<span class="mtag" style="background:${mStyle.bg};border:1px solid ${mStyle.border};color:${mStyle.text}">${esc(materia)}</span>`:`<span class="mtag" style="background:rgba(128,128,128,0.15);border:1px solid rgba(128,128,128,0.3);color:#888">${esc(materia)}</span>`}</div>`:""}
   </div>
 </a>`;
@@ -482,7 +467,6 @@ function renderUnified(items,now,isViewingToday){
   });
 })();
 
-// ── HELPERS ──
 function rc(cal,ev){
   const summary=(cal.summary||"").toLowerCase(), id=(cal.id||"").toLowerCase();
   if(id==="primary"||summary.includes("capitanileticiats")||id.includes("capitanileticiats"))return ROSA;
@@ -491,7 +475,7 @@ function rc(cal,ev){
   for(const[n,v]of Object.entries(NC))if(summary.includes(n)||id.includes(n))return v;
   return GCAL_DEFAULT_COLOR;
 }
-const AGORA_WINDOW_MS=5*60*1000; // 5 min antes/depois do início OU durante todo o evento = destaque "agora"
+const AGORA_WINDOW_MS=5*60*1000;
 function hp(ev,now){
   if(!ev.start||!ev.start.dateTime)return false;
   const startMs=new Date(ev.start.dateTime).getTime();
@@ -509,18 +493,6 @@ function esc(s){
   var x=String(s);
   return x.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;").replace(/\//g,"&#47;");
 }
-function isSpecialTitle(t){
-  if(!t)return false;
-  var s=String(t).trimStart().toLowerCase();
-  return s.startsWith("recesso")||s.startsWith("feriado")||s.startsWith("home office");
-}
-function decorateTitle(t){
-  var safe=esc(t||"");
-  if(isSpecialTitle(t)){
-    return '<span class="ev-heart">❤︎</span>'+safe;
-  }
-  return safe;
-}
 function escAttr(s){return esc(s);}
 function escUrl(u){
   if(!u||typeof u!=="string")return"#";
@@ -529,7 +501,6 @@ function escUrl(u){
   return"#";
 }
 
-// header date
 try{updateHeaderDate();}catch(_){}
 window.gisLoaded=gisLoaded;
 setTimeout(function(){if(!gsOk){gsOk=true;boot();}},4000);
