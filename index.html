@@ -153,13 +153,15 @@ const MATERIA_COLORS = {
   "Eventos e Submissões de Artigos":{ bg:"rgba(255,184,120,0.2)", border:"rgba(255,184,120,0.4)", text:"#ffb878" },
   "Eventos e Submissão de Artigos":{ bg:"rgba(255,184,120,0.2)", border:"rgba(255,184,120,0.4)", text:"#ffb878" },
   "Feriados e Home Office":       { bg:"rgba(81,183,73,0.15)",   border:"rgba(81,183,73,0.4)",   text:"#7ed67a" },
+  "Exercício Físico":             { bg:"rgba(255,255,255,0.15)", border:"rgba(255,255,255,0.4)", text:"#ffffff" },
 };
 const MATERIA_BAR = {
   "TCC":"#e05688","OTAG":"#5484ed","OMOG":"#5484ed",
   "Estágio":"#a36bed","Rotina":"#46d6db",
   "Eventos e Submissões de Artigos":"#ffb878",
   "Eventos e Submissão de Artigos":"#ffb878",
-  "Feriados e Home Office":"#51b749"
+  "Feriados e Home Office":"#51b749",
+  "Exercício Físico":"#ffffff"
 };
 
 let tokenClient, gsOk=false, timer=null, cd=REFRESH, pendingSilentRefresh=false, silentRefreshCb=null;
@@ -512,6 +514,7 @@ function decorateTitle(title,opts){
   var tLower=t.toLowerCase();
   if(tLower.indexOf("daily")===0)parts.push('<span class="ev-sym" style="color:#a36bed">☎︎</span>');
   if(materia==="TCC"||isCapitanileticiats)parts.push('<span class="ev-sym" style="color:#e05688">✎</span>');
+  if(materia==="Exercício Físico")parts.push('<span class="ev-sym" style="color:#ffffff">☻</span>');
   if(tLower.indexOf("recesso")===0||tLower.indexOf("feriado")===0||tLower.indexOf("home office")===0)parts.push('<span class="ev-sym" style="color:#7ed67a">✿</span>');
   if(tLower.indexOf("desligamento")===0)parts.push('<span class="ev-sym" style="color:#a36bed">✷</span>');
   if(tLower.indexOf("homologação")===0||tLower.indexOf("homologacao")===0)parts.push('<span class="ev-sym" style="color:#a36bed">◐</span>');
@@ -536,6 +539,5 @@ setTimeout(function(){if(!gsOk){gsOk=true;boot();}},4000);
 <noscript><p style="padding:1rem;color:#8a8a86">Ative o JavaScript para usar a agenda.</p></noscript>
 </body>
 </html>
-
 
 
