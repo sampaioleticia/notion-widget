@@ -516,6 +516,7 @@ function decorateTitle(title,opts){
   if(tLower.indexOf("desligamento")===0)parts.push('<span class="ev-sym" style="color:#a36bed">✷</span>');
   if(tLower.indexOf("homologação")===0||tLower.indexOf("homologacao")===0)parts.push('<span class="ev-sym" style="color:#8a8a86">☽</span>');
   if(tLower.indexOf("cutoff")===0)parts.push('<span class="ev-sym" style="color:#8a8a86">☾</span>');
+  if(tLower.indexOf("anticoncepcional")===0)parts.push('<span class="ev-sym" style="color:#46d6db">✔</span>');
   parts.push(esc(t||"Sem título"));
   return parts.join("");
 }
