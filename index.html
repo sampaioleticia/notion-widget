@@ -514,8 +514,8 @@ function decorateTitle(title,opts){
   if(materia==="TCC"||isCapitanileticiats)parts.push('<span class="ev-sym" style="color:#e05688">✎</span>');
   if(tLower.indexOf("recesso")===0||tLower.indexOf("feriado")===0||tLower.indexOf("home office")===0)parts.push('<span class="ev-sym" style="color:#7ed67a">✿</span>');
   if(tLower.indexOf("desligamento")===0)parts.push('<span class="ev-sym" style="color:#a36bed">✷</span>');
-  if(tLower.indexOf("homologação")===0||tLower.indexOf("homologacao")===0)parts.push('<span class="ev-sym" style="color:#8a8a86">☽</span>');
-  if(tLower.indexOf("cutoff")===0)parts.push('<span class="ev-sym" style="color:#8a8a86">☾</span>');
+  if(tLower.indexOf("homologação")===0||tLower.indexOf("homologacao")===0)parts.push('<span class="ev-sym" style="color:#a36bed">☽</span>');
+  if(tLower.indexOf("cutoff")===0)parts.push('<span class="ev-sym" style="color:#a36bed">☾</span>');
   if(tLower.indexOf("anticoncepcional")===0)parts.push('<span class="ev-sym" style="color:#46d6db">✔</span>');
   parts.push(esc(t||"Sem título"));
   return parts.join("");
