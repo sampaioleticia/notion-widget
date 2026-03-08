@@ -516,7 +516,7 @@ function decorateTitle(title,opts){
   if(tLower.indexOf("desligamento")===0)parts.push('<span class="ev-sym" style="color:#a36bed">✷</span>');
   if(tLower.indexOf("homologação")===0||tLower.indexOf("homologacao")===0)parts.push('<span class="ev-sym" style="color:#a36bed">☽</span>');
   if(tLower.indexOf("cutoff")===0)parts.push('<span class="ev-sym" style="color:#a36bed">☾</span>');
-  if(tLower.indexOf("anticoncepcional")===0)parts.push('<span class="ev-sym" style="color:#46d6db">✔</span>');
+  if(tLower.indexOf("anticoncepcional")===0)parts.push('<span class="ev-sym" style="color:#46d6db">✓</span>');
   parts.push(esc(t||"Sem título"));
   return parts.join("");
 }
@@ -536,3 +536,4 @@ setTimeout(function(){if(!gsOk){gsOk=true;boot();}},4000);
 <noscript><p style="padding:1rem;color:#8a8a86">Ative o JavaScript para usar a agenda.</p></noscript>
 </body>
 </html>
+
